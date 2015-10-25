@@ -13,26 +13,22 @@ app.set('views', __dirname + '/views');
 //Set up static folder
 app.use(express.static(__dirname + '/public'));
 
-var user = 'azat_co';
-var story_slug = 'kazan';
+var user = 'storify';
 
-//Paste your values
-var api_key = "";
-var username = "";
-var _token = "";
-
-app.get('/',function(req, res){
-  //Fetch elements from Storify API
-  superagent.get("http://api.storify.com/v1/stories/" + user + "/" + story_slug)
-    .query({api_key: api_key,
-      username: username,
-      _token: _token})
-    .set({  Accept: 'application/json' })
-    .end(function(e, storifyResponse){
-      if (e) next(e);
-      //Render template with story object in response body     
-      return res.render('index',storifyResponse.body.content);      
-    })
+app.get('/', function(req, res) {
+    //Fetch elements from Storify API
+    superagent.get("http://api.storify.com/v1/stories/" + user)
+        .set({
+            Accept: 'application/json'
+        })
+        .end(function(e, storifyResponse) {
+            if (e) next(e);
+            //Render template with story object in response body     
+            return res.render('index', {
+                user: user,
+                content: storifyResponse.body.content
+            });
+        })
 
 })
 
